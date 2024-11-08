@@ -11,8 +11,12 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.VarbitChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
 
 @Slf4j
 @PluginDescriptor(
@@ -27,25 +31,55 @@ public class SpecJinglePlugin extends Plugin
 	private SpecJingleConfig config;
 
 	private int specialAttack = 100;
+	private boolean unknownSpecial = true;
+
+	public ArrayList<String> thresholdValues = new ArrayList<>();
 
 	@Override
 	protected void startUp() throws Exception
 	{
-		specialAttack = 0;
-		client.playSoundEffect(3924,50);
+		unknownSpecial = true;
+		thresholdValues.clear();
+		if (!config.thresholdList().equals(""))
+		{
+			String temp = config.thresholdList();
+			for (String str : temp.split(","))
+			{
+				if (!str.trim().equals("")) { thresholdValues.add(str.trim());}
+			}
+		}
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event) {
+		if (!event.getGroup().equals("specjingle"))
+		{
+			return;
+		}
+		thresholdValues.clear();
+		if (!config.thresholdList().equals(""))
+		{
+			String temp = config.thresholdList();
+			for (String str : temp.split(","))
+			{
+				if (!str.trim().equals("")) { thresholdValues.add(str.trim());}
+			}
+		}
 	}
 
 
 	@Override
 	protected void shutDown() throws Exception
 	{
-		client.playSoundEffect(3924,50);
-		specialAttack = 0;
+		thresholdValues.clear();
 	}
 
-
+	@Subscribe
 	public void onVarbitChanged(VarbitChanged varbitChanged) {
-
+		if( unknownSpecial == true){
+			unknownSpecial = false;
+			return;
+		}
 
 		if (varbitChanged.getVarpId() != VarPlayer.SPECIAL_ATTACK_PERCENT) {
 			return;
@@ -55,21 +89,19 @@ public class SpecJinglePlugin extends Plugin
 
 		int newSpecialAttack = varbitChanged.getValue();
 
-
-		int[] percentValues = {100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5};
 		boolean playCheck = false;
 
-		for (int percent : percentValues) {
-			if (newSpecialAttack >= percent && specialAttack < percent) {
-				playCheck = true;
-				break;
+		for (String entry : thresholdValues){
+			int value = -1;
+			if( StringUtils.isNumeric(entry)){
+				value = Integer.parseInt(entry);
 			}
+			if( newSpecialAttack >= value*10 && specialAttack < value*10 ) playCheck = true;
 		}
-
 		specialAttack = newSpecialAttack;
 
-		if (playCheck || true) {
-			client.playSoundEffect(3924, this.config.volume());
+		if (playCheck) {
+			client.playSoundEffect(97, this.config.volume());
 		}
 
 		specialAttack = newSpecialAttack;
