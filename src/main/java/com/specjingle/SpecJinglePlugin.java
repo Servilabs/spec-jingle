@@ -34,6 +34,7 @@ public class SpecJinglePlugin extends Plugin
 	private boolean unknownSpecial = true;
 
 	public ArrayList<String> thresholdValues = new ArrayList<>();
+	public ArrayList<String> ethresholdValues = new ArrayList<>();
 
 	@Override
 	protected void startUp() throws Exception
@@ -46,6 +47,15 @@ public class SpecJinglePlugin extends Plugin
 			for (String str : temp.split(","))
 			{
 				if (!str.trim().equals("")) { thresholdValues.add(str.trim());}
+			}
+		}
+		ethresholdValues.clear();
+		if (!config.ethresholdList().equals(""))
+		{
+			String temp = config.ethresholdList();
+			for (String str : temp.split(","))
+			{
+				if (!str.trim().equals("")) { ethresholdValues.add(str.trim());}
 			}
 		}
 	}
@@ -65,6 +75,15 @@ public class SpecJinglePlugin extends Plugin
 				if (!str.trim().equals("")) { thresholdValues.add(str.trim());}
 			}
 		}
+		ethresholdValues.clear();
+		if (!config.ethresholdList().equals(""))
+		{
+			String temp = config.ethresholdList();
+			for (String str : temp.split(","))
+			{
+				if (!str.trim().equals("")) { ethresholdValues.add(str.trim());}
+			}
+		}
 	}
 
 
@@ -72,11 +91,13 @@ public class SpecJinglePlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		thresholdValues.clear();
+		ethresholdValues.clear();
 	}
 
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged varbitChanged) {
 		if( unknownSpecial == true){
+			specialAttack = varbitChanged.getValue();
 			unknownSpecial = false;
 			return;
 		}
@@ -90,18 +111,68 @@ public class SpecJinglePlugin extends Plugin
 		int newSpecialAttack = varbitChanged.getValue();
 
 		boolean playCheck = false;
+		int sound = 1;
 
 		for (String entry : thresholdValues){
 			int value = -1;
-			if( StringUtils.isNumeric(entry)){
+			int soundValue = 1;
+			if (entry.contains(":"))
+			{
+				String[] strArr = entry.split(":");
+				if (StringUtils.isNumeric(strArr[0]))
+				{
+					value = Integer.parseInt(strArr[0]);
+				}
+				if (StringUtils.isNumeric(strArr[1])) {
+					soundValue = Integer.parseInt(strArr[1]);
+				}
+			}
+			else if (StringUtils.isNumeric(entry))
+			{
 				value = Integer.parseInt(entry);
 			}
-			if( newSpecialAttack >= value*10 && specialAttack < value*10 ) playCheck = true;
+			if( newSpecialAttack >= value*10 && specialAttack < value*10 ){
+				playCheck = true;
+				sound = soundValue;
+			}
 		}
-		specialAttack = newSpecialAttack;
+
+		for (String entry : ethresholdValues){
+			int value = -1;
+			int soundValue = 1;
+			if (entry.contains(":"))
+			{
+				String[] strArr = entry.split(":");
+				if (StringUtils.isNumeric(strArr[0]))
+				{
+					value = Integer.parseInt(strArr[0]);
+				}
+				if (StringUtils.isNumeric(strArr[1])) {
+					soundValue = Integer.parseInt(strArr[1]);
+				}
+			}
+			else if (StringUtils.isNumeric(entry))
+			{
+				value = Integer.parseInt(entry);
+			}
+			if( newSpecialAttack == value*10 && specialAttack < value*10 ){
+				playCheck = true;
+				sound = soundValue;
+			}
+		}
+
 
 		if (playCheck) {
-			client.playSoundEffect(3924, this.config.volume());
+			if( sound == 1) client.playSoundEffect(3924,this.config.volume());
+			if( sound == 2) client.playSoundEffect(97,this.config.volume());
+			if( sound == 3) client.playSoundEffect(4046,this.config.volume());
+			if( sound == 4) client.playSoundEffect(4152,this.config.volume());
+			if( sound == 5) client.playSoundEffect(147,this.config.volume());
+			if( sound == 6) client.playSoundEffect(202,this.config.volume());
+			if( sound == 7) client.playSoundEffect(203,this.config.volume());
+			if( sound == 8) client.playSoundEffect(984,this.config.volume());
+			if( sound == 9) client.playSoundEffect(115,this.config.volume());
+
 		}
 
 		specialAttack = newSpecialAttack;

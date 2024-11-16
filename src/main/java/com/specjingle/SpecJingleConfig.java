@@ -22,12 +22,23 @@ public interface SpecJingleConfig extends Config
 	@ConfigItem(
 			position = 2,
 			keyName = "thresholdList",
-			name = "Values upon which notification must be triggered",
+			name = "Threshold Values",
 			description = "List of special attack values for which jingle must play"
 	)
 	default String thresholdList()
 	{
-		return "30,50,75";
+		return "30:9,50";
+	}
+
+	@ConfigItem(
+			position = 3,
+			keyName = "ethresholdList",
+			name = "Exact Equalilty Threshold Values",
+			description = "List of special attack values for which jingle must play only upon exact value (100:0 makes 100 silent)"
+	)
+	default String ethresholdList()
+	{
+		return "75:4,100:0";
 	}
 
 
