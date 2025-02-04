@@ -41,18 +41,22 @@ public class SpecJinglePlugin extends Plugin
 	{
 		unknownSpecial = true;
 		thresholdValues.clear();
-		if (!config.thresholdList().equals(""))
+		String temp = config.thresholdList();
+		if( config.selectedPreset() == 2) temp = config.thresholdList2();
+		if( config.selectedPreset() == 3) temp = config.thresholdList3();
+		if (!temp.equals(""))
 		{
-			String temp = config.thresholdList();
 			for (String str : temp.split(","))
 			{
 				if (!str.trim().equals("")) { thresholdValues.add(str.trim());}
 			}
 		}
 		ethresholdValues.clear();
-		if (!config.ethresholdList().equals(""))
+		temp = config.ethresholdList();
+		if( config.selectedPreset() == 2) temp = config.ethresholdList2();
+		if( config.selectedPreset() == 3) temp = config.ethresholdList3();
+		if (!temp.equals(""))
 		{
-			String temp = config.ethresholdList();
 			for (String str : temp.split(","))
 			{
 				if (!str.trim().equals("")) { ethresholdValues.add(str.trim());}
@@ -67,18 +71,22 @@ public class SpecJinglePlugin extends Plugin
 			return;
 		}
 		thresholdValues.clear();
-		if (!config.thresholdList().equals(""))
+		String temp = config.thresholdList();
+		if( config.selectedPreset() == 2) temp = config.thresholdList2();
+		if( config.selectedPreset() == 3) temp = config.thresholdList3();
+		if (!temp.equals(""))
 		{
-			String temp = config.thresholdList();
 			for (String str : temp.split(","))
 			{
 				if (!str.trim().equals("")) { thresholdValues.add(str.trim());}
 			}
 		}
 		ethresholdValues.clear();
-		if (!config.ethresholdList().equals(""))
+		temp = config.ethresholdList();
+		if( config.selectedPreset() == 2) temp = config.ethresholdList2();
+		if( config.selectedPreset() == 3) temp = config.ethresholdList3();
+		if (!temp.equals(""))
 		{
-			String temp = config.ethresholdList();
 			for (String str : temp.split(","))
 			{
 				if (!str.trim().equals("")) { ethresholdValues.add(str.trim());}
@@ -172,6 +180,7 @@ public class SpecJinglePlugin extends Plugin
 			if( sound == 7) client.playSoundEffect(203,this.config.volume());
 			if( sound == 8) client.playSoundEffect(984,this.config.volume());
 			if( sound == 9) client.playSoundEffect(115,this.config.volume());
+			if( sound >= 10 ) client.playSoundEffect(sound,this.config.volume());
 
 		}
 
