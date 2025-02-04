@@ -93,7 +93,8 @@ public interface SpecJingleConfig extends Config
 			keyName = "selectedPreset",
 			name = "Selected preset",
 			description = "Jingle volume",
-			position = 7
+			position = 7,
+			section = additionalPresetoptions
 	)
 	default int selectedPreset() {
 		return 1;
@@ -103,7 +104,8 @@ public interface SpecJingleConfig extends Config
 			position = 8,
 			keyName = "thresholdList2 ",
 			name = "Thresholds for preset 2",
-			description = "List of special attack values for which jingle must play on preset 2"
+			description = "List of special attack values for which jingle must play on preset 2",
+			section = additionalPresetoptions
 	)
 	default String thresholdList2()
 	{
@@ -114,7 +116,8 @@ public interface SpecJingleConfig extends Config
 			position = 9,
 			keyName = "ethresholdList2",
 			name = "Exact Thresholds for preset 2",
-			description = "List of special attack values for which jingle must play only upon exact value on second preset"
+			description = "List of special attack values for which jingle must play only upon exact value on second preset",
+			section = additionalPresetoptions
 	)
 	default String ethresholdList2()
 	{
@@ -125,7 +128,8 @@ public interface SpecJingleConfig extends Config
 			position = 10,
 			keyName = "thresholdList3 ",
 			name = "Thresholdsfor preset 3",
-			description = "List of special attack values for which jingle must play on preset 3"
+			description = "List of special attack values for which jingle must play on preset 3",
+			section = additionalPresetoptions
 	)
 	default String thresholdList3()
 	{
@@ -136,7 +140,8 @@ public interface SpecJingleConfig extends Config
 			position = 11,
 			keyName = "ethresholdList3",
 			name = "Exact Thresholds for preset 3",
-			description = "List of special attack values for which jingle must play only upon exact value for preset 3"
+			description = "List of special attack values for which jingle must play only upon exact value for preset 3",
+			section = additionalPresetoptions
 	)
 	default String ethresholdList3()
 	{
